@@ -2,9 +2,8 @@ package oracle
 
 import (
 	"fmt"
-	"price-feeder/oracle/types"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"price-feeder/oracle/types"
 )
 
 // ComputeVWAP computes the volume weighted average price for all tickers.

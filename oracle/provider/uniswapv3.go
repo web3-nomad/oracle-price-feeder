@@ -5,13 +5,12 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"price-feeder/oracle/types"
 	"strconv"
 	"strings"
 	"time"
 
-	"price-feeder/oracle/types"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"

@@ -1,12 +1,12 @@
 package oracle
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"price-feeder/oracle/provider"
 
 	"price-feeder/oracle/types"
 
 	"github.com/cosmos/cosmos-sdk/telemetry"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 )
 

@@ -93,11 +93,8 @@ type (
 		Deviations           []Deviation                  `toml:"deviation_thresholds"`
 		ProviderMinOverrides []ProviderMinOverrides       `toml:"provider_min_overrides"`
 		Account              Account                      `toml:"account" validate:"required,gt=0,dive,required"`
-		Keyring              Keyring                      `toml:"keyring" validate:"required,gt=0,dive,required"`
-		RPC                  RPC                          `toml:"rpc" validate:"required,gt=0,dive,required"`
 		Telemetry            Telemetry                    `toml:"telemetry"`
-		GasAdjustment        float64                      `toml:"gas_adjustment" validate:"required"`
-		GasPrices            string                       `toml:"gas_prices" validate:"required"`
+		VotePeriod           string                       `toml:"vote_period" validate:"required"`
 		ProviderTimeout      string                       `toml:"provider_timeout"`
 		ProviderEndpoints    []ProviderEndpoints          `toml:"provider_endpoints" validate:"dive"`
 		EnableServer         bool                         `toml:"enable_server"`
@@ -144,24 +141,10 @@ type (
 	// Account defines account related configuration that is related to the
 	// network and transaction signing functionality.
 	Account struct {
-		ChainID    string `toml:"chain_id" validate:"required"`
-		Address    string `toml:"address" validate:"required"`
-		Validator  string `toml:"validator" validate:"required"`
-		FeeGranter string `toml:"fee_granter"`
-		Prefix     string `toml:"prefix" validate:"required"`
-	}
-
-	// Keyring defines the required keyring configuration.
-	Keyring struct {
-		Backend string `toml:"backend" validate:"required"`
-		Dir     string `toml:"dir" validate:"required"`
-	}
-
-	// RPC defines RPC configuration of both the gRPC and Tendermint nodes.
-	RPC struct {
-		TMRPCEndpoint string `toml:"tmrpc_endpoint" validate:"required"`
-		GRPCEndpoint  string `toml:"grpc_endpoint" validate:"required"`
-		RPCTimeout    string `toml:"rpc_timeout" validate:"required"`
+		NetworkName  string `toml:"network_name" validate:"required"`
+		OperatorID   string `toml:"operator_id" validate:"required"`
+		OperatorSeed string `toml:"operator_seed" validate:"required"`
+		TopicID      string `toml:"topic_id" validate:"required"`
 	}
 
 	// Telemetry defines the configuration options for application telemetry.
@@ -187,7 +170,7 @@ type (
 		// metrics emitted using the wrapper functions defined in telemetry package.
 		//
 		// Example:
-		// [["chain_id", "cosmoshub-1"]]
+		// [["network_name", "testnet"]]
 		GlobalLabels [][]string `toml:"global_labels" mapstructure:"global-labels"`
 
 		// PrometheusRetentionTime, when positive, enables a Prometheus metrics sink.

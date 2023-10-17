@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -15,7 +16,7 @@ import (
 
 	"price-feeder/oracle/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
+	//	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 )
 

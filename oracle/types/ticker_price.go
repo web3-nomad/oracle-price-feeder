@@ -2,9 +2,8 @@ package types
 
 import (
 	"fmt"
-	"time"
-
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	"time"
 )
 
 // TickerPrice defines price and volume information for a symbol or ticker exchange rate.

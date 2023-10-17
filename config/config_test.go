@@ -23,20 +23,12 @@ func TestValidate(t *testing.T) {
 				{Base: "ATOM", Quote: "USDT", Providers: []provider.Name{provider.ProviderKraken}},
 			},
 			Account: config.Account{
-				Address:   "fromaddr",
-				Validator: "valaddr",
-				ChainID:   "chain-id",
-				Prefix:    "chain",
+				NetworkName:  "testnet",
+				OperatorID:   "0.0.12213",
+				OperatorSeed: "lorem ipsum",
+				TopicID:      "0.0.123",
 			},
-			Keyring: config.Keyring{
-				Backend: "test",
-				Dir:     "/Users/username/.kujira",
-			},
-			RPC: config.RPC{
-				TMRPCEndpoint: "http://localhost:26657",
-				GRPCEndpoint:  "localhost:9090",
-				RPCTimeout:    "100ms",
-			},
+
 			Telemetry: config.Telemetry{
 				ServiceName:             "price-feeder",
 				Enabled:                 true,
@@ -46,8 +38,8 @@ func TestValidate(t *testing.T) {
 				GlobalLabels:            make([][]string, 1),
 				PrometheusRetentionTime: 120,
 			},
-			GasAdjustment: 1.5,
-			GasPrices:     "0.00125ukuji",
+
+			VotePeriod: "10s",
 			Healthchecks: []config.Healthchecks{
 				{URL: "https://hc-ping.com/HEALTHCHECK-UUID", Timeout: "200ms"},
 			},
@@ -142,8 +134,8 @@ func TestParseConfig_Valid(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
-gas_adjustment = 1.5
-gas_prices = "0.00125ukuji"
+
+vote_period="10s"
 
 [server]
 listen_addr = "0.0.0.0:99999"
@@ -182,24 +174,15 @@ providers = [
 base = "STATOM"
 quote = "USDT"
 providers = ["osmosis"]
-derivative = "tvwap"
+derivative = "twap"
 derivative_period = "30m"
 
 [account]
-address = "kujira15nejfgcaanqpw25ru4arvfd0fwy6j8clccvwx4"
-validator = "kujiravalcons14rjlkfzp56733j5l5nfk6fphjxymgf8mj04d5p"
-chain_id = "kujira-local-testnet"
-prefix = "kujira"
+network_name = "testnet"
+operator_id="0.0.5700506"
+operator_seed = "toss despair choice giraffe baby beach current glass blouse rice obtain kitten goddess zebra busy balcony inflict hill barely deputy eternal asset paper sword"
+topic_id="0.0.5700596"
 
-[keyring]
-backend = "test"
-dir = "/Users/username/.kujira"
-pass = "keyringPassword"
-
-[rpc]
-tmrpc_endpoint = "http://localhost:26657"
-grpc_endpoint = "localhost:9090"
-rpc_timeout = "100ms"
 
 [telemetry]
 service_name = "price-feeder"
@@ -230,7 +213,7 @@ timeout = "200ms"
 	require.Len(t, cfg.CurrencyPairs[0].Providers, 3)
 	require.Equal(t, provider.ProviderKraken, cfg.CurrencyPairs[0].Providers[0])
 	require.Equal(t, provider.ProviderBinance, cfg.CurrencyPairs[0].Providers[1])
-	require.Equal(t, "tvwap", cfg.CurrencyPairs[3].Derivative)
+	require.Equal(t, "twap", cfg.CurrencyPairs[3].Derivative)
 }
 
 func TestParseConfig_Valid_NoTelemetry(t *testing.T) {
@@ -239,8 +222,7 @@ func TestParseConfig_Valid_NoTelemetry(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
-gas_adjustment = 1.5
-gas_prices = "0.00125ukuji"
+vote_period="10s"
 
 [server]
 listen_addr = "0.0.0.0:99999"
@@ -276,20 +258,10 @@ providers = [
 ]
 
 [account]
-address = "kujira15nejfgcaanqpw25ru4arvfd0fwy6j8clccvwx4"
-validator = "kujiravalcons14rjlkfzp56733j5l5nfk6fphjxymgf8mj04d5p"
-chain_id = "kujira-local-testnet"
-prefix = "kujira"
-
-[keyring]
-backend = "test"
-dir = "/Users/username/.kujira"
-pass = "keyringPassword"
-
-[rpc]
-tmrpc_endpoint = "http://localhost:26657"
-grpc_endpoint = "localhost:9090"
-rpc_timeout = "100ms"
+network_name = "testnet"
+operator_id="0.0.5700506"
+operator_seed = "toss despair choice giraffe baby beach current glass blouse rice obtain kitten goddess zebra busy balcony inflict hill barely deputy eternal asset paper sword"
+topic_id="0.0.5700596"
 
 [telemetry]
 enabled = false
@@ -381,9 +353,7 @@ func TestParseConfig_Valid_Deviations(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
-gas_adjustment = 1.5
-gas_prices = "0.00125ukuji"
-
+vote_period="10s"
 [server]
 listen_addr = "0.0.0.0:99999"
 read_timeout = "20s"
@@ -426,20 +396,10 @@ providers = [
 ]
 
 [account]
-address = "kujira15nejfgcaanqpw25ru4arvfd0fwy6j8clccvwx4"
-validator = "kujiravalcons14rjlkfzp56733j5l5nfk6fphjxymgf8mj04d5p"
-chain_id = "kujira-local-testnet"
-prefix = "kujira"
-
-[keyring]
-backend = "test"
-dir = "/Users/username/.kujira"
-pass = "keyringPassword"
-
-[rpc]
-tmrpc_endpoint = "http://localhost:26657"
-grpc_endpoint = "localhost:9090"
-rpc_timeout = "100ms"
+network_name = "testnet"
+operator_id="0.0.5700506"
+operator_seed = "toss despair choice giraffe baby beach current glass blouse rice obtain kitten goddess zebra busy balcony inflict hill barely deputy eternal asset paper sword"
+topic_id="0.0.5700596"
 
 [telemetry]
 service_name = "price-feeder"
@@ -478,8 +438,7 @@ func TestParseConfig_Invalid_Deviations(t *testing.T) {
 	defer os.Remove(tmpFile.Name())
 
 	content := []byte(`
-gas_adjustment = 1.5
-
+vote_period="10s"
 [server]
 listen_addr = "0.0.0.0:99999"
 read_timeout = "20s"
@@ -522,19 +481,10 @@ providers = [
 ]
 
 [account]
-address = "umee15nejfgcaanqpw25ru4arvfd0fwy6j8clccvwx4"
-validator = "umeevalcons14rjlkfzp56733j5l5nfk6fphjxymgf8mj04d5p"
-chain_id = "umee-local-testnet"
-
-[keyring]
-backend = "test"
-dir = "/Users/username/.umee"
-pass = "keyringPassword"
-
-[rpc]
-tmrpc_endpoint = "http://localhost:26657"
-grpc_endpoint = "localhost:9090"
-rpc_timeout = "100ms"
+network_name = "testnet"
+operator_id="0.0.5700506"
+operator_seed = "toss despair choice giraffe baby beach current glass blouse rice obtain kitten goddess zebra busy balcony inflict hill barely deputy eternal asset paper sword"
+topic_id="0.0.5700596"
 
 [telemetry]
 service_name = "price-feeder"

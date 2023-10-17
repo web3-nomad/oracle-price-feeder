@@ -1,11 +1,11 @@
 package oracle
 
 import (
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"price-feeder/oracle/provider"
 	"price-feeder/oracle/types"
 	"sort"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 )
 

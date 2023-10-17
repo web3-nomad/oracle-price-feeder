@@ -2,12 +2,12 @@ package derivative
 
 import (
 	"fmt"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"time"
 
 	"price-feeder/oracle/history"
 	"price-feeder/oracle/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 )
 

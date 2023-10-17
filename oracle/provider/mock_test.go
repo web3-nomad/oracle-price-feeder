@@ -2,13 +2,13 @@ package provider
 
 import (
 	"context"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"price-feeder/oracle/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 	"github.com/stretchr/testify/require"
 )

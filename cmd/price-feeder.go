@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"context"
 	"fmt"
+	"github.com/hashgraph/hedera-sdk-go/v2"
 	"io"
 	"net/http"
 	"os"
@@ -13,7 +14,6 @@ import (
 	"time"
 
 	input "github.com/cosmos/cosmos-sdk/client/input"
-	"github.com/ignite/cli/ignite/pkg/cosmoscmd"
 	"github.com/mitchellh/mapstructure"
 
 	"github.com/gorilla/mux"
@@ -56,6 +56,7 @@ an API. Secondly, the price-feeder consumes this data and periodically submits
 vote and prevote messages following the oracle voting procedure.`,
 	RunE: priceFeederCmdHandler,
 }
+var hashgraphClient *hedera.Client
 
 func init() {
 	rootCmd.PersistentFlags().String(flagLogLevel, zerolog.InfoLevel.String(), "logging level")
@@ -68,6 +69,12 @@ func init() {
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	hashgraphClient, err := hedera.ClientForName(string(hedera.NetworkNameTestnet))
+	hashgraphClient.SetTransportSecurity(false)
+	if err != nil {
+		println(err.Error(), ": error creating client")
+		return
+	}
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -113,23 +120,14 @@ func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	cosmoscmd.SetPrefixes(cfg.Account.Prefix)
-
 	ctx, cancel := context.WithCancel(cmd.Context())
 	g, ctx := errgroup.WithContext(ctx)
 
 	// listen for and trap any OS signal to gracefully shutdown and exit
 	trapSignal(cancel, logger)
-
-	rpcTimeout, err := time.ParseDuration(cfg.RPC.RPCTimeout)
+	votePeriod, err := time.ParseDuration(cfg.VotePeriod)
 	if err != nil {
-		return fmt.Errorf("failed to parse RPC timeout: %w", err)
-	}
-
-	// Gather pass via env variable || std input
-	keyringPass, err := getKeyringPassword()
-	if err != nil {
-		return err
+		return fmt.Errorf("failed to parse vote period: %w", err)
 	}
 
 	heightPollInterval, err := time.ParseDuration(cfg.HeightPollInterval)
@@ -140,18 +138,11 @@ func priceFeederCmdHandler(cmd *cobra.Command, args []string) error {
 	oracleClient, err := client.NewOracleClient(
 		ctx,
 		logger,
-		cfg.Account.ChainID,
-		cfg.Keyring.Backend,
-		cfg.Keyring.Dir,
-		keyringPass,
-		cfg.RPC.TMRPCEndpoint,
-		rpcTimeout,
-		cfg.Account.Address,
-		cfg.Account.Validator,
-		cfg.Account.FeeGranter,
-		cfg.RPC.GRPCEndpoint,
-		cfg.GasAdjustment,
-		cfg.GasPrices,
+		cfg.Account.NetworkName,
+		cfg.Account.OperatorID,
+		cfg.Account.OperatorSeed,
+		cfg.Account.TopicID,
+		votePeriod,
 		heightPollInterval,
 	)
 	if err != nil {

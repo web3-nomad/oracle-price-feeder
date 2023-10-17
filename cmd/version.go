@@ -14,7 +14,8 @@ import (
 const (
 	flagFormat = "format"
 
-	pathCosmosSDK = "github.com/cosmos/cosmos-sdk"
+	pathCosmosSDK    = "github.com/cosmos/cosmos-sdk"
+	pathHashGraphSDK = "github.com/hashgraph/hedera-sdk-go/v2"
 )
 
 var (
@@ -28,10 +29,11 @@ var (
 )
 
 type versionInfo struct {
-	Version string `json:"version" yaml:"version"`
-	Commit  string `json:"commit" yaml:"commit"`
-	SDK     string `json:"sdk" yaml:"sdk"`
-	Go      string `json:"go" yaml:"go"`
+	Version      string `json:"version" yaml:"version"`
+	Commit       string `json:"commit" yaml:"commit"`
+	CosmosSDK    string `json:"cosmos-sdk" yaml:"cosmos-sdk"`
+	HashgraphSDK string `json:"hashgraph-sdk" yaml:"hashgraph-sdk"`
+	Go           string `json:"go" yaml:"go"`
 }
 
 func getVersionCmd() *cobra.Command {
@@ -50,10 +52,11 @@ func getVersionCmd() *cobra.Command {
 			}
 
 			verInfo := versionInfo{
-				Version: Version,
-				Commit:  Commit,
-				SDK:     mod.Require[pathCosmosSDK],
-				Go:      fmt.Sprintf("%s %s/%s", runtime.Version(), runtime.GOOS, runtime.GOARCH),
+				Version:      Version,
+				Commit:       Commit,
+				CosmosSDK:    mod.Require[pathCosmosSDK],
+				HashgraphSDK: mod.Require[pathHashGraphSDK],
+				Go:           fmt.Sprintf("%s %s/%s", runtime.Version(), runtime.GOOS, runtime.GOARCH),
 			}
 
 			var bz []byte

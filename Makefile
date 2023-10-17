@@ -1,7 +1,7 @@
 BUILD_DIR ?= $(CURDIR)/build
 COMMIT    := $(shell git log -1 --format='%H')
 
-all: test-unit install
+all: build test-unit install
 
 .PHONY: all
 
@@ -28,6 +28,9 @@ BUILD_FLAGS := -ldflags '$(ldflags)'
 
 CGO_FLAG = CGO_ENABLED=0
 ifeq ($(shell uname),Linux)
+  CGO_FLAG = CGO_ENABLED=1
+endif
+ifeq ($(shell uname),Darwin)
   CGO_FLAG = CGO_ENABLED=1
 endif
 

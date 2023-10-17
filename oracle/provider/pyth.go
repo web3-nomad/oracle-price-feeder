@@ -3,12 +3,12 @@ package provider
 import (
 	"context"
 	"encoding/json"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	"strings"
 	"time"
 
 	"price-feeder/oracle/types"
 
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/rs/zerolog"
 )
 
