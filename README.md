@@ -3,9 +3,9 @@
 This is a standalone version of [Kujira's superb port](https://github.com/Team-Kujira/oracle-price-feeder) of [Umee's fantastic work](https://github.com/umee-network/umee/tree/main/price-feeder) migrating [Terra's oracle-feeder](https://github.com/terra-money/oracle-feeder) app to Go, allowing it to submit price updates to HCS.
 ## TODO
 
-TODO: work on tick() function
-TODO: fix tests.
-TODO: change hash to base64 in messages
+* TODO: work on tick() function
+* TODO: fix tests.
+* TODO: change hash to base64 in messages
 
 ## Changes
 
